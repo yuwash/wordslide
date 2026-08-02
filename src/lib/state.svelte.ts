@@ -23,6 +23,7 @@ export interface AppStateSnapshot {
   duration: number;
   mnemonicMapping: MnemonicMapping;
   queueState: ReturnType<FlashcardQueueManager['getState']>;
+  currentWordIndex: number;
 }
 
 const defaultWords: WordItem[] = [
@@ -38,6 +39,7 @@ class AppState {
   duration = $state<number>(2); // in seconds
   mnemonicMapping = $state<MnemonicMapping>(defaultMapping as MnemonicMapping);
   queueManager = $state<FlashcardQueueManager>(new FlashcardQueueManager());
+  currentWordIndex = $state<number>(0);
 
   constructor() {
     this.loadFromLocalStorage();
@@ -69,6 +71,12 @@ class AppState {
         const parsedQueueState = JSON.parse(savedQueueState);
         this.queueManager.restoreState(parsedQueueState);
       }
+
+      // Load current word index
+      const savedCurrentWordIndex = localStorage.getItem('wordslide_currentWordIndex');
+      if (savedCurrentWordIndex) {
+        this.currentWordIndex = parseInt(savedCurrentWordIndex, 10);
+      }
     } catch (error) {
       console.error('Failed to load state from localStorage:', error);
     }
@@ -80,6 +88,7 @@ class AppState {
       localStorage.setItem('wordslide_duration', this.duration.toString());
       localStorage.setItem('wordslide_mnemonicMapping', JSON.stringify(this.mnemonicMapping));
       localStorage.setItem('wordslide_queueState', JSON.stringify(this.queueManager.getState()));
+      localStorage.setItem('wordslide_currentWordIndex', this.currentWordIndex.toString());
     } catch (error) {
       console.error('Failed to save state to localStorage:', error);
     }
@@ -100,6 +109,11 @@ class AppState {
     this.saveToLocalStorage();
   }
 
+  setCurrentWordIndex(index: number) {
+    this.currentWordIndex = index;
+    this.saveToLocalStorage();
+  }
+
   /**
    * Get the current state of the application as a serializable object
    */
@@ -108,7 +122,8 @@ class AppState {
       words: [...this.words],
       duration: this.duration,
       mnemonicMapping: {...this.mnemonicMapping},
-      queueState: this.queueManager.getState()
+      queueState: this.queueManager.getState(),
+      currentWordIndex: this.currentWordIndex
     };
   }
 
@@ -120,6 +135,7 @@ class AppState {
     this.duration = state.duration;
     this.mnemonicMapping = {...state.mnemonicMapping};
     this.queueManager.restoreState(state.queueState);
+    this.currentWordIndex = state.currentWordIndex;
     this.saveToLocalStorage();
   }
 }
