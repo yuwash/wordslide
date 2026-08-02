@@ -18,6 +18,13 @@ export interface MnemonicMapping {
   mappings: Record<string, MnemonicLetterMapping>;
 }
 
+export interface AppStateSnapshot {
+  words: WordItem[];
+  duration: number;
+  mnemonicMapping: MnemonicMapping;
+  queueState: ReturnType<FlashcardQueueManager['getState']>;
+}
+
 const defaultWords: WordItem[] = [
   { id: '1', word: 'králik', meaning: 'rabbit' },
   { id: '2', word: 'ovca', meaning: 'sheep' },
@@ -42,6 +49,28 @@ class AppState {
 
   setMnemonicMapping(mapping: MnemonicMapping) {
     this.mnemonicMapping = mapping;
+  }
+
+  /**
+   * Get the current state of the application as a serializable object
+   */
+  getState(): AppStateSnapshot {
+    return {
+      words: [...this.words],
+      duration: this.duration,
+      mnemonicMapping: {...this.mnemonicMapping},
+      queueState: this.queueManager.getState()
+    };
+  }
+
+  /**
+   * Restore the application state from a previously saved snapshot
+   */
+  restoreState(state: AppStateSnapshot): void {
+    this.words = [...state.words];
+    this.duration = state.duration;
+    this.mnemonicMapping = {...state.mnemonicMapping};
+    this.queueManager.restoreState(state.queueState);
   }
 }
 
