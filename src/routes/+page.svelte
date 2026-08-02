@@ -1,16 +1,13 @@
-<script>
-  import { createEventDispatcher } from 'svelte';
+<script lang="ts">
   import LearnTab from './LearnTab.svelte';
   import CreateTab from './CreateTab.svelte';
 
-  const dispatch = createEventDispatcher();
+  const tabs = ['learn', 'create'] as const;
+  type Tab = (typeof tabs)[number];
+  let activeTab = $state<Tab>('learn');
 
-  const tabs = ['learn', 'create'];
-  let activeTab = $state(tabs[0]);
-
-  function handleTabClick(tab) {
+  function handleTabClick(tab: Tab) {
     activeTab = tab;
-    dispatch('tab:change', { tab });
   }
 </script>
 
@@ -23,21 +20,38 @@
   />
 </svelte:head>
 
-<div class="container">
-  <h1 class="title is-3">Wordslide</h1>
+<div class="container py-5 px-3">
+  <div class="has-text-centered mb-5">
+    <h1 class="title is-2 has-text-primary">Wordslide</h1>
+    <p class="subtitle is-5">Passively learn Slovak vocabulary with visual pronunciation guides</p>
+  </div>
 
   <!-- Bulma tabs -->
-  <div class="tabs is-centered">
+  <div class="tabs is-centered is-boxed">
     <ul>
       {#each tabs as tab}
         <li class={activeTab === tab ? 'is-active' : ''}>
-          <a on:click={() => handleTabClick(tab)}>{tab}</a>
+          <a
+            href="#{tab}"
+            onclick={(e) => {
+              e.preventDefault();
+              handleTabClick(tab);
+            }}
+            onkeydown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleTabClick(tab);
+              }
+            }}
+          >
+            <span class="is-capitalized">{tab}</span>
+          </a>
         </li>
       {/each}
     </ul>
   </div>
 
-  <section class="section">
+  <section class="section py-4">
     {#if activeTab === 'learn'}
       <LearnTab />
     {:else if activeTab === 'create'}

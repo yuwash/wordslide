@@ -1,0 +1,17 @@
+{
+  "alphabet": "tokipona-12",
+  "mappings": {
+    "A": { "emoji": "🥥", "description": "coconut for its big opening" },
+    "E": { "emoji": "🌄", "description": "sunrise over mountain for the half-way opening" },
+    "I": { "emoji": "📂", "description": "open file folder for the narrow and lengthy slit" },
+    "O": { "emoji": "🕳", "description": "hole, a round opening" },
+    "U": { "emoji": "🌬", "description": "wind depicting the exact mouth form" },
+    "K": { "emoji": "🌋", "description": "volcano for coming from very deep" },
+    "L": { "emoji": "🚡", "description": "aerial tramway for how the tongue continuously touches the top" },
+    "M": { "emoji": "💋", "description": "kiss for the closed lips" },
+    "N": { "emoji": "👃", "description": "nose" },
+    "P": { "emoji": "🪠", "description": "plunger for the sudden release" },
+    "S": { "emoji": "🦷", "description": "tooth" },
+    "T": { "emoji": "🔨", "description": "hammer for how tongue quickly pushes and releases" }
+  }
+}
