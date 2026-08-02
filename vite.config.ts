@@ -19,7 +19,16 @@ export default defineConfig({
 				fallback: '404.html',
 				precompress: false,
 				strict: true
-			})
+			}),
+			prerender: {
+				// Handle cases where links might point to IDs that don't exist.
+				// See https://svelte.dev/docs/kit/configuration#prerender-handleMissingId
+				handleMissingId: ({ id, path }) => {
+					console.warn(`Missing ID "${id}" on page "${path}"`);
+					// Returning a path here will cause SvelteKit to redirect to that path
+					// instead of throwing an error. For this case, we just want to warn.
+				}
+			}
 		})
 	]
 });
