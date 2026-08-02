@@ -9,6 +9,9 @@
   let uploadError = $state('');
   let successMessage = $state('');
 
+  // Store image blobs for display
+  let imageBlobs: Map<string, string> = new Map();
+
   function cleanCSVCell(cell: string): string {
     let cleaned = cell.trim();
     if (
@@ -148,7 +151,54 @@
           return;
         }
 
-        appState.setMnemonicMapping(parsed);
+        // Validate that all mappings have either emoji or file
+        for (const [key, value] of Object.entries(parsed.mappings)) {
+          if (!value.emoji && !value.file) {
+            uploadError = `Mapping for '${key}' must have either 'emoji' or 'file' property.`;
+            return;
+          }
+        }
+
+        // Extract image files and create blob URLs
+        const imageFiles = Object.keys(unzipped).filter(key => 
+          key.match(/\.(jpg|jpeg|png)$/i)
+        );
+
+        // Clear existing blobs
+        imageBlobs.clear();
+
+        // Process image files
+        for (const key of imageFiles) {
+          const imageData = unzipped[key];
+          if (imageData) {
+            const blob = new Blob([imageData], { type: getImageMimeType(key) });
+            const blobUrl = URL.createObjectURL(blob);
+            imageBlobs.set(key, blobUrl);
+          }
+        }
+
+        // Update the mapping with file paths
+        const updatedMappings = { ...parsed.mappings };
+        for (const [key, value] of Object.entries(updatedMappings)) {
+          if (value.file) {
+            // Replace file reference with blob URL if it exists
+            const blobUrl = imageBlobs.get(value.file);
+            if (blobUrl) {
+              updatedMappings[key] = {
+                ...value,
+                file: blobUrl
+              };
+            }
+          }
+        }
+
+        // Create updated mapping with resolved file paths
+        const updatedMapping = {
+          ...parsed,
+          mappings: updatedMappings
+        };
+
+        appState.setMnemonicMapping(updatedMapping);
         successMessage = `Successfully loaded mnemonic mapping zip with covered alphabet '${parsed.alphabet}'.`;
         if (zipInput) zipInput.value = ''; // Reset file input
       } catch (err: any) {
@@ -159,6 +209,19 @@
       uploadError = 'Error reading the zip file.';
     };
     reader.readAsArrayBuffer(file);
+  }
+
+  function getImageMimeType(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase();
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      default:
+        return 'image/png';
+    }
   }
 
   function handleReset() {
@@ -217,6 +280,7 @@
   <h2 class="title is-4">Import Mnemonic Mapping</h2>
   <p class="subtitle is-6">
     Upload a <strong>.zip</strong> file containing a <code>mapping.json</code> file representing covered alphabet <code>{ALPHABET_CODE}</code>.
+    The mapping can include either emoji or image files (jpg/png).
   </p>
 
   <div class="field mb-5">

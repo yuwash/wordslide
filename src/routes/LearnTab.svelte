@@ -69,16 +69,25 @@
       count = gIdx + 1;
     }
 
-    const list: { emoji: string; rep: string }[] = [];
+    const list: { emoji?: string; file?: string; rep: string }[] = [];
     for (let i = 0; i < count; i++) {
       const repGrapheme = getRepresentativeGrapheme(groups[i]);
       const tpLetter = mapToTokiPona(repGrapheme);
       const entry = appState.mnemonicMapping.mappings[tpLetter];
-      const emoji = entry ? entry.emoji : '';
-      list.push({
-        emoji,
-        rep: repGrapheme.toLowerCase()
-      });
+      
+      if (entry) {
+        if (entry.emoji) {
+          list.push({
+            emoji: entry.emoji,
+            rep: repGrapheme.toLowerCase()
+          });
+        } else if (entry.file) {
+          list.push({
+            file: entry.file,
+            rep: repGrapheme.toLowerCase()
+          });
+        }
+      }
     }
     return list;
   });
@@ -151,6 +160,7 @@
     return Object.entries(appState.mnemonicMapping.mappings).map(([letter, item]) => ({
       letter,
       emoji: item.emoji,
+      file: item.file,
       desc: item.description
     }));
   });
@@ -231,10 +241,17 @@
           {#if visibleEmojis().length > 0}
             <div class="is-flex is-justify-content-center is-align-items-center gap-4">
               {#each visibleEmojis() as item, i (i)}
-                <ruby class="mx-2 has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
-                  <span>{item.emoji}</span>
-                  <rt class="has-text-weight-bold has-text-grey-dark" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
-                </ruby>
+                {#if item.emoji}
+                  <ruby class="mx-2 has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
+                    <span>{item.emoji}</span>
+                    <rt class="has-text-weight-bold has-text-grey-dark" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
+                  </ruby>
+                {:else if item.file}
+                  <ruby class="mx-2 has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
+                    <img src={item.file} alt={item.rep} style="width: 100%; height: auto; max-width: 100px; border-radius: 8px;" />
+                    <rt class="has-text-weight-bold has-text-grey-dark" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
+                  </ruby>
+                {/if}
               {/each}
             </div>
           {:else}
@@ -292,7 +309,11 @@
         <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;">
           {#each guideItems() as item}
             <div class="is-flex is-align-items-center gap-3 p-2 border-rounded" style="background: #fdfdfd; border: 1px solid #f0f0f0; border-radius: 6px;">
-              <span class="is-size-2">{item.emoji}</span>
+              {#if item.emoji}
+                <span class="is-size-2">{item.emoji}</span>
+              {:else if item.file}
+                <img src={item.file} alt={item.letter} style="width: 100%; height: auto; max-width: 60px; border-radius: 8px;" />
+              {/if}
               <div>
                 <strong>{item.letter}</strong>
                 <p class="is-size-7 has-text-grey">{item.desc}</p>

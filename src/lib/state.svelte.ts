@@ -7,7 +7,8 @@ export interface WordItem {
 }
 
 export interface MnemonicLetterMapping {
-  emoji: string;
+  emoji?: string;
+  file?: string;
   description: string;
 }
 
