@@ -82,13 +82,10 @@ class AppState {
     }
   }
 
-  private saveToLocalStorage(): void {
+  private saveItemToLocalStorage(key: string, value: string): void {
+    const absoluteKey = 'wordslide_' + key;
     try {
-      localStorage.setItem('wordslide_words', JSON.stringify(this.words));
-      localStorage.setItem('wordslide_duration', this.duration.toString());
-      localStorage.setItem('wordslide_mnemonicMapping', JSON.stringify(this.mnemonicMapping));
-      localStorage.setItem('wordslide_queueState', JSON.stringify(this.queueManager.getState()));
-      localStorage.setItem('wordslide_currentWordIndex', this.currentWordIndex.toString());
+      localStorage.setItem(absoluteKey, value);
     } catch (error) {
       console.error('Failed to save state to localStorage:', error);
     }
@@ -96,22 +93,26 @@ class AppState {
 
   setWords(newWords: WordItem[]) {
     this.words = newWords;
-    this.saveToLocalStorage();
+    this.saveItemToLocalStorage('words', JSON.stringify(this.words));
   }
 
   setDuration(secs: number) {
     this.duration = secs;
-    this.saveToLocalStorage();
+    this.saveItemToLocalStorage('duration', this.duration.toString());
   }
 
   setMnemonicMapping(mapping: MnemonicMapping) {
     this.mnemonicMapping = mapping;
-    this.saveToLocalStorage();
+    this.saveItemToLocalStorage('mnemonicMapping', JSON.stringify(this.mnemonicMapping));
   }
 
   setCurrentWordIndex(index: number) {
     this.currentWordIndex = index;
-    this.saveToLocalStorage();
+    this.saveItemToLocalStorage('currentWordIndex', this.currentWordIndex.toString());
+  }
+
+  saveQueueState() {
+    this.saveItemToLocalStorage('queueState', JSON.stringify(this.queueManager.getState()));
   }
 
   /**
@@ -136,7 +137,6 @@ class AppState {
     this.mnemonicMapping = {...state.mnemonicMapping};
     this.queueManager.restoreState(state.queueState);
     this.currentWordIndex = state.currentWordIndex;
-    this.saveToLocalStorage();
   }
 }
 
