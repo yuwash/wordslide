@@ -3,14 +3,13 @@
   import { appState } from '../lib/state.svelte';
   import { splitWordIntoGroups, getRepresentativeGrapheme, mapToTokiPona } from '../lib/tokipona-12-sk';
 
-  let currentWordIndex = $state(0);
   let step = $state(0);
   let isPlaying = $state(false);
   let intervalId: any = null;
   let showGallery = $state(false);
 
   // Derive active word
-  const activeWord = $derived(appState.words[currentWordIndex] || null);
+  const activeWord = $derived(appState.words[appState.currentWordIndex] || null);
 
   // Derive groups of the active word
   const groups = $derived(activeWord ? splitWordIntoGroups(activeWord.word) : []);
@@ -108,8 +107,7 @@
         const newIndex = appState.words.findIndex(w => w.id === nextCardId);
         if (newIndex !== -1) {
           step = 0;
-          currentWordIndex = newIndex;
-          appState.setCurrentWordIndex(currentWordIndex);
+          appState.setCurrentWordIndex(newIndex);
         } else {
           // Fallback to next card if not found
           nextWord();
@@ -129,15 +127,17 @@
   function previousWord() {
     if (appState.words.length === 0) return;
     step = 0;
-    currentWordIndex = (currentWordIndex - 1 + appState.words.length) % appState.words.length;
-    appState.setCurrentWordIndex(currentWordIndex);
+    appState.setCurrentWordIndex(
+      (appState.currentWordIndex - 1 + appState.words.length) % appState.words.length
+    );
   }
 
   function nextWord() {
     if (appState.words.length === 0) return;
     step = 0;
-    currentWordIndex = (currentWordIndex + 1) % appState.words.length;
-    appState.setCurrentWordIndex(currentWordIndex);
+    appState.setCurrentWordIndex(
+      (appState.currentWordIndex + 1) % appState.words.length
+    );
   }
 
   function startSlideshow() {
@@ -249,7 +249,7 @@
       <div class="card-content has-text-centered">
         <!-- Progress Indicator -->
         <div class="is-flex is-justify-content-between is-align-items-center mb-4 text-muted">
-          <span class="tag is-info is-light mr-1">Word {currentWordIndex + 1} of {appState.words.length}</span>
+          <span class="tag is-info is-light mr-1">Word {appState.currentWordIndex + 1} of {appState.words.length}</span>
           <span class="tag is-dark is-light">Step {step} / {totalSteps}</span>
         </div>
 
