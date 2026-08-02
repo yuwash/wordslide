@@ -23,7 +23,7 @@
 <div class="container py-5 px-3">
   <div class="has-text-centered mb-5">
     <h1 class="title is-2 has-text-primary">Wordslide</h1>
-    <p class="subtitle is-5">Passively learn Slovak vocabulary with visual pronunciation guides</p>
+    <p class="subtitle is-5">Passively learn vocabulary with visual mnemonics</p>
   </div>
 
   <!-- Bulma tabs -->

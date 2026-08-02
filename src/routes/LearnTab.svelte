@@ -251,7 +251,7 @@
       <div class="card-content has-text-centered">
         <!-- Progress Indicator -->
         <div class="is-flex is-justify-content-between is-align-items-center mb-4 text-muted">
-          <span class="tag is-info is-light">Word {currentWordIndex + 1} of {appState.words.length}</span>
+          <span class="tag is-info is-light mr-1">Word {currentWordIndex + 1} of {appState.words.length}</span>
           <span class="tag is-dark is-light">Step {step} / {totalSteps}</span>
         </div>
 
@@ -289,7 +289,7 @@
 
         <!-- Word Space -->
         <div class="word-container py-3">
-          <p class="heading is-size-6 text-uppercase tracking-wider mb-2">Slovak Word</p>
+          <p class="heading is-size-6 text-uppercase tracking-wider mb-2">Answer</p>
           <p class="title is-1 has-text-primary mb-2" style="font-family: monospace, sans-serif; letter-spacing: 2px;">
             {currentText}
           </p>
