@@ -1,4 +1,5 @@
 import defaultMapping from './tokipona-12-emoji.json';
+import { FlashcardQueueManager } from './queue';
 
 export interface WordItem {
   id: string;
@@ -29,6 +30,7 @@ class AppState {
   words = $state<WordItem[]>(defaultWords);
   duration = $state<number>(2); // in seconds
   mnemonicMapping = $state<MnemonicMapping>(defaultMapping as MnemonicMapping);
+  queueManager = $state<FlashcardQueueManager>(new FlashcardQueueManager());
 
   setWords(newWords: WordItem[]) {
     this.words = newWords;

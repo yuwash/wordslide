@@ -2,16 +2,12 @@
   import { onDestroy } from 'svelte';
   import { appState } from '../lib/state.svelte';
   import { splitWordIntoGroups, getRepresentativeGrapheme, mapToTokiPona } from '../lib/tokipona-12-sk';
-  import { FlashcardQueueManager } from '../lib/queue';
 
   let currentWordIndex = $state(0);
   let step = $state(0);
   let isPlaying = $state(false);
   let intervalId: any = null;
   let showGallery = $state(false);
-
-  // Create queue manager
-  const queueManager = new FlashcardQueueManager();
 
   // Derive active word
   const activeWord = $derived(appState.words[currentWordIndex] || null);
@@ -101,7 +97,7 @@
     
     // If we've fully revealed the current word, queue it for review
     if (isFullyRevealed) {
-      const nextCardId = queueManager.progress(activeWord.id);
+      const nextCardId = appState.queueManager.progress(activeWord.id);
       
       if (nextCardId === null) {
         // No card is due, show a new card
