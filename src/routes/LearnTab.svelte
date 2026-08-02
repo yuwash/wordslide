@@ -2,12 +2,16 @@
   import { onDestroy } from 'svelte';
   import { appState } from '../lib/state.svelte';
   import { splitWordIntoGroups, getRepresentativeGrapheme, mapToTokiPona } from '../lib/tokipona-12-sk';
+  import { FlashcardQueueManager } from '../lib/queue';
 
   let currentWordIndex = $state(0);
   let step = $state(0);
   let isPlaying = $state(false);
   let intervalId: any = null;
   let showGallery = $state(false);
+
+  // Create queue manager
+  const queueManager = new FlashcardQueueManager();
 
   // Derive active word
   const activeWord = $derived(appState.words[currentWordIndex] || null);
@@ -94,12 +98,35 @@
 
   function advanceStep() {
     if (appState.words.length === 0) return;
-    if (step < totalSteps) {
-      step++;
+    
+    // If we've fully revealed the current word, queue it for review
+    if (isFullyRevealed) {
+      const nextCardId = queueManager.progress(activeWord.id);
+      
+      if (nextCardId === null) {
+        // No card is due, show a new card
+        step = 0;
+        currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+      } else {
+        // Show the due card
+        step = 0;
+        const newIndex = appState.words.findIndex(w => w.id === nextCardId);
+        if (newIndex !== -1) {
+          currentWordIndex = newIndex;
+        } else {
+          // Fallback to next card if not found
+          currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+        }
+      }
     } else {
-      // Flip to next word!
-      step = 0;
-      currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+      // Continue revealing the current word
+      if (step < totalSteps) {
+        step++;
+      } else {
+        // Shouldn't happen with our logic, but just in case
+        step = 0;
+        currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+      }
     }
   }
 
