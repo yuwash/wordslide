@@ -13,6 +13,12 @@ export interface QueuedCard {
   scheduledAtPosition: number;
 }
 
+export interface FlashcardQueueState {
+  queue: QueuedCard[];
+  reviewCounter: number;
+  waitingIntervals: number[];
+}
+
 export class FlashcardQueueManager {
   private queue: QueuedCard[] = [];
   private reviewCounter: number = 0;
@@ -99,10 +105,21 @@ export class FlashcardQueueManager {
   /**
    * Helper method to inspect internal queue state.
    */
-  public getState() {
+  public getState(): FlashcardQueueState {
     return {
       reviewCounter: this.reviewCounter,
       queue: [...this.queue],
+      waitingIntervals: [...this.waitingIntervals],
     };
+  }
+
+  /**
+   * Restores the queue manager state from a serialized state object.
+   * @param state The serialized state to restore
+   */
+  public restoreState(state: FlashcardQueueState): void {
+    this.reviewCounter = state.reviewCounter;
+    this.queue = [...state.queue];
+    this.waitingIntervals = [...state.waitingIntervals];
   }
 }
