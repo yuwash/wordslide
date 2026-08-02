@@ -98,20 +98,21 @@
     // If we've fully revealed the current word, queue it for review
     if (isFullyRevealed) {
       const nextCardId = appState.queueManager.progress(activeWord.id);
+      appState.saveQueueState();
       
       if (nextCardId === null) {
         // No card is due, show a new card
-        step = 0;
-        currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+        nextWord();
       } else {
         // Show the due card
-        step = 0;
         const newIndex = appState.words.findIndex(w => w.id === nextCardId);
         if (newIndex !== -1) {
+          step = 0;
           currentWordIndex = newIndex;
+          appState.setCurrentWordIndex(currentWordIndex);
         } else {
           // Fallback to next card if not found
-          currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+          nextWord();
         }
       }
     } else {
@@ -120,8 +121,7 @@
         step++;
       } else {
         // Shouldn't happen with our logic, but just in case
-        step = 0;
-        currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+        nextWord();
       }
     }
   }
@@ -130,12 +130,14 @@
     if (appState.words.length === 0) return;
     step = 0;
     currentWordIndex = (currentWordIndex - 1 + appState.words.length) % appState.words.length;
+    appState.setCurrentWordIndex(currentWordIndex);
   }
 
   function nextWord() {
     if (appState.words.length === 0) return;
     step = 0;
     currentWordIndex = (currentWordIndex + 1) % appState.words.length;
+    appState.setCurrentWordIndex(currentWordIndex);
   }
 
   function startSlideshow() {
