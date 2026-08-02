@@ -39,16 +39,65 @@ class AppState {
   mnemonicMapping = $state<MnemonicMapping>(defaultMapping as MnemonicMapping);
   queueManager = $state<FlashcardQueueManager>(new FlashcardQueueManager());
 
+  constructor() {
+    this.loadFromLocalStorage();
+  }
+
+  private loadFromLocalStorage(): void {
+    try {
+      // Load words
+      const savedWords = localStorage.getItem('wordslide_words');
+      if (savedWords) {
+        this.words = JSON.parse(savedWords);
+      }
+
+      // Load duration
+      const savedDuration = localStorage.getItem('wordslide_duration');
+      if (savedDuration) {
+        this.duration = parseInt(savedDuration, 10);
+      }
+
+      // Load mnemonic mapping
+      const savedMnemonicMapping = localStorage.getItem('wordslide_mnemonicMapping');
+      if (savedMnemonicMapping) {
+        this.mnemonicMapping = JSON.parse(savedMnemonicMapping);
+      }
+
+      // Load queue state
+      const savedQueueState = localStorage.getItem('wordslide_queueState');
+      if (savedQueueState) {
+        const parsedQueueState = JSON.parse(savedQueueState);
+        this.queueManager.restoreState(parsedQueueState);
+      }
+    } catch (error) {
+      console.error('Failed to load state from localStorage:', error);
+    }
+  }
+
+  private saveToLocalStorage(): void {
+    try {
+      localStorage.setItem('wordslide_words', JSON.stringify(this.words));
+      localStorage.setItem('wordslide_duration', this.duration.toString());
+      localStorage.setItem('wordslide_mnemonicMapping', JSON.stringify(this.mnemonicMapping));
+      localStorage.setItem('wordslide_queueState', JSON.stringify(this.queueManager.getState()));
+    } catch (error) {
+      console.error('Failed to save state to localStorage:', error);
+    }
+  }
+
   setWords(newWords: WordItem[]) {
     this.words = newWords;
+    this.saveToLocalStorage();
   }
 
   setDuration(secs: number) {
     this.duration = secs;
+    this.saveToLocalStorage();
   }
 
   setMnemonicMapping(mapping: MnemonicMapping) {
     this.mnemonicMapping = mapping;
+    this.saveToLocalStorage();
   }
 
   /**
@@ -71,6 +120,7 @@ class AppState {
     this.duration = state.duration;
     this.mnemonicMapping = {...state.mnemonicMapping};
     this.queueManager.restoreState(state.queueState);
+    this.saveToLocalStorage();
   }
 }
 
