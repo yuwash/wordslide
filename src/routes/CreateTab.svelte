@@ -269,7 +269,7 @@
         class="slider"
         style="flex-grow: 1;"
       />
-      <span class="ml-3 tag is-info is-light">{appState.duration}s per step</span>
+      <span class="ml-3 tag is-info">{appState.duration}s per step</span>
     </div>
     <p class="help">Adjust the duration (in seconds) for each automatic card flip and reveal step.</p>
   </div>
@@ -300,7 +300,7 @@
         </span>
       </label>
     </div>
-    <p class="help">Currently loaded mapping covers alphabet: <span class="tag is-dark">{appState.mnemonicMapping.alphabet}</span></p>
+    <p class="help">Currently loaded mapping covers alphabet: <span class="tag">{appState.mnemonicMapping.alphabet}</span></p>
   </div>
 
   <hr />
@@ -312,14 +312,14 @@
   </p>
 
   {#if uploadError}
-    <div class="notification is-danger is-light">
+    <div class="notification is-danger">
       <button class="delete" aria-label="close" onclick={() => uploadError = ''}></button>
       {uploadError}
     </div>
   {/if}
 
   {#if successMessage}
-    <div class="notification is-success is-light">
+    <div class="notification is-success">
       <button class="delete" aria-label="close" onclick={() => successMessage = ''}></button>
       {successMessage}
     </div>
@@ -377,17 +377,17 @@
   <div class="is-flex is-justify-content-between is-align-items-center mb-3">
     <h3 class="title is-5 mb-0">Current Word List ({appState.words.length} items)</h3>
     <div class="buttons">
-      <button class="button is-light is-warning" onclick={handleReset}>
+      <button class="button is-warning" onclick={handleReset}>
         Reset to Default
       </button>
-      <button class="button is-light is-danger" onclick={handleClear}>
+      <button class="button is-danger" onclick={handleClear}>
         Clear All
       </button>
     </div>
   </div>
 
   {#if appState.words.length === 0}
-    <div class="notification is-warning is-light has-text-centered">
+    <div class="notification is-warning has-text-centered">
       No words are currently loaded. Upload a CSV file or paste vocabulary to start learning!
     </div>
   {:else}

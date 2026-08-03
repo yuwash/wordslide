@@ -193,7 +193,7 @@
 
 <div class="learn-container">
   <!-- Slideshow controls at the top -->
-  <div class="is-flex is-justify-content-center is-align-items-center mb-5 gap-3">
+  <div class="is-flex is-justify-content-center is-align-items-center gap-3">
     <button
       id="play-pause-button"
       class="button is-large {isPlaying ? 'is-danger' : 'is-success'}"
@@ -245,36 +245,36 @@
     </div>
   {:else if activeWord}
     <!-- Main Card Display -->
-    <div class="card my-5 mx-auto" style="max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <div class="card my-3 mx-auto" style="max-width: 50rem">
       <div class="card-content has-text-centered">
         <!-- Progress Indicator -->
         <div class="is-flex is-justify-content-between is-align-items-center mb-4 text-muted">
-          <span class="tag is-info is-light mr-1">Word {appState.currentWordIndex + 1} of {appState.words.length}</span>
-          <span class="tag is-dark is-light">Step {step} / {totalSteps}</span>
+          <span class="tag is-info mr-1">Word {appState.currentWordIndex + 1} of {appState.words.length}</span>
+          <span class="tag">Step {step} / {totalSteps}</span>
         </div>
 
         <!-- Word's Meaning (Always Visible) -->
-        <div class="mb-4">
+        <div>
           <p class="heading is-size-6 text-uppercase tracking-wider">Meaning</p>
-          <p class="title is-2 has-text-info my-2">{activeWord.meaning}</p>
+          <p class="title is-2 has-text-info">{activeWord.meaning}</p>
         </div>
 
         <hr style="opacity: 0.5;" />
 
         <!-- Representative Ruby Emoji Space -->
-        <div class="emoji-container is-flex is-justify-content-center is-align-items-center mb-5" style="height: 160px; overflow-y: hidden;">
+        <div class="emoji-container is-flex is-justify-content-center is-align-items-center" style="height: 160px; overflow-y: hidden;">
           {#if visibleEmojis().length > 0}
             <div class="is-flex is-justify-content-center is-align-items-center gap-4">
               {#each visibleEmojis() as item, i (i)}
                 {#if item.emoji}
-                  <ruby class="mx-2 has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
+                  <ruby class="has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
                     <span>{item.emoji}</span>
-                    <rt class="has-text-weight-bold has-text-grey-dark" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
+                    <rt class="has-text-weight-bold" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
                   </ruby>
                 {:else if item.file}
-                  <ruby class="mx-2 has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
+                  <ruby class="has-text-centered animate-emoji" style="font-size: 5rem; line-height: 1; display: inline-flex; flex-direction: column-reverse; align-items: center;">
                     <img src={item.file} alt={item.rep} style="width: 100%; height: auto; max-width: 100px; border-radius: 8px;" />
-                    <rt class="has-text-weight-bold has-text-grey-dark" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
+                    <rt class="has-text-weight-bold" style="font-size: 1.4rem; line-height: 1.2; text-transform: lowercase; display: block; margin-bottom: 2px;">{item.rep}</rt>
                   </ruby>
                 {/if}
               {/each}
@@ -286,32 +286,32 @@
         </div>
 
         <!-- Word Space -->
-        <div class="word-container py-3">
-          <p class="heading is-size-6 text-uppercase tracking-wider mb-2">Answer</p>
-          <p class="title is-1 has-text-primary mb-2" style="font-family: monospace, sans-serif; letter-spacing: 2px;">
+        <div class="word-container">
+          <p class="heading is-size-6 text-uppercase tracking-wider">Answer</p>
+          <p class="title is-1 has-text-primary" style="font-family: monospace, sans-serif; letter-spacing: 2px;">
             {currentText}
           </p>
-          <p class="is-size-7 has-text-grey-light">
+          <p class="is-size-7">
             {#if isFullyRevealed}
-              <span class="tag is-success is-light">Fully Revealed</span>
+              <span class="tag is-success">Fully Revealed</span>
             {:else}
-              <span class="tag is-warning is-light">Revealing...</span>
+              <span class="tag is-warning">Revealing...</span>
             {/if}
           </p>
         </div>
       </div>
 
       <!-- Card footer/progress bar -->
-      <footer class="card-footer" style="background-color: #fafafa;">
-        <div class="w-100 p-3 is-flex is-justify-content-space-between is-align-items-center" style="width: 100%;">
-          <div class="is-size-7 has-text-grey">
-            Auto-flip speed: <strong class="has-text-dark">{appState.duration}s</strong>
+      <footer class="card-footer">
+        <div class="column is-full p-3 is-flex is-justify-content-space-between is-align-items-center">
+          <div class="is-size-7">
+            Auto-flip speed: <strong>{appState.duration}s</strong>
           </div>
           <div>
             {#if isPlaying}
               <span class="tag is-danger animate-pulse">● Autoplay Active</span>
             {:else}
-              <span class="tag is-light">Paused</span>
+              <span class="tag">Paused</span>
             {/if}
           </div>
         </div>
@@ -321,7 +321,7 @@
 
   <!-- Collapsible Mnemonic Image Gallery -->
   <div class="guide-box mx-auto mt-6" style="max-width: 600px;">
-    <button class="button is-light is-fullwidth" onclick={() => showGallery = !showGallery}>
+    <button class="button is-fullwidth" onclick={() => showGallery = !showGallery}>
       {showGallery ? 'Hide Mnemonic Image Gallery' : 'Show Mnemonic Image Gallery'}
     </button>
 
@@ -333,7 +333,7 @@
         </p>
         <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;">
           {#each guideItems() as item}
-            <div class="is-flex is-align-items-center gap-3 p-2 border-rounded" style="background: #fdfdfd; border: 1px solid #f0f0f0; border-radius: 6px;">
+            <div class="card is-flex is-align-items-center gap-3 p-2 mb-0">
               {#if item.emoji}
                 <span class="is-size-2">{item.emoji}</span>
               {:else if item.file}
@@ -341,7 +341,7 @@
               {/if}
               <div>
                 <strong>{item.letter}</strong>
-                <p class="is-size-7 has-text-grey">{item.desc}</p>
+                <p class="is-size-7">{item.desc}</p>
               </div>
             </div>
           {/each}
