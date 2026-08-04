@@ -198,7 +198,8 @@
           mappings: updatedMappings
         };
 
-        appState.setMnemonicMapping(updatedMapping);
+        // Use the filename as the mapping name
+        appState.setMnemonicMapping(updatedMapping, file.name);
         successMessage = `Successfully loaded mnemonic mapping zip with covered alphabet '${parsed.alphabet}'.`;
         if (zipInput) zipInput.value = ''; // Reset file input
       } catch (err: any) {
@@ -232,6 +233,7 @@
       { id: '4', word: 'stôl', meaning: 'table' },
       { id: '5', word: 'včela', meaning: 'bee' }
     ]);
+    appState.setMnemonicMapping(defaultMapping as MnemonicMapping, 'tokipona-12-emoji.json');
     successMessage = 'Reset to default Slovak vocabulary list.';
     uploadError = '';
   }
@@ -300,7 +302,7 @@
         </span>
       </label>
     </div>
-    <p class="help">Currently loaded mapping covers alphabet: <span class="tag">{appState.mnemonicMapping.alphabet}</span></p>
+    <p class="help">Currently using mapping: <span class="tag">{appState.mnemonicMappingName}</span></p>
   </div>
 
   <hr />

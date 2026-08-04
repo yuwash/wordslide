@@ -22,6 +22,7 @@ export interface AppStateSnapshot {
   words: WordItem[];
   duration: number;
   mnemonicMapping: MnemonicMapping;
+  mnemonicMappingName: string;
   queueState: ReturnType<FlashcardQueueManager['getState']>;
   currentWordIndex: number;
 }
@@ -38,6 +39,7 @@ class AppState {
   words = $state<WordItem[]>(defaultWords);
   duration = $state<number>(2); // in seconds
   mnemonicMapping = $state<MnemonicMapping>(defaultMapping as MnemonicMapping);
+  mnemonicMappingName = $state<string>('tokipona-12-emoji.json');
   queueManager = $state<FlashcardQueueManager>(new FlashcardQueueManager());
   currentWordIndex = $state<number>(0);
 
@@ -63,6 +65,12 @@ class AppState {
       const savedMnemonicMapping = localStorage.getItem('wordslide_mnemonicMapping');
       if (savedMnemonicMapping) {
         this.mnemonicMapping = JSON.parse(savedMnemonicMapping);
+      }
+
+      // Load mnemonic mapping name
+      const savedMnemonicMappingName = localStorage.getItem('wordslide_mnemonicMappingName');
+      if (savedMnemonicMappingName) {
+        this.mnemonicMappingName = savedMnemonicMappingName;
       }
 
       // Load queue state
@@ -101,9 +109,11 @@ class AppState {
     this.saveItemToLocalStorage('duration', this.duration.toString());
   }
 
-  setMnemonicMapping(mapping: MnemonicMapping) {
+  setMnemonicMapping(mapping: MnemonicMapping, name: string = 'custom mapping') {
     this.mnemonicMapping = mapping;
+    this.mnemonicMappingName = name;
     this.saveItemToLocalStorage('mnemonicMapping', JSON.stringify(this.mnemonicMapping));
+    this.saveItemToLocalStorage('mnemonicMappingName', this.mnemonicMappingName);
   }
 
   setCurrentWordIndex(index: number) {
@@ -123,6 +133,7 @@ class AppState {
       words: [...this.words],
       duration: this.duration,
       mnemonicMapping: {...this.mnemonicMapping},
+      mnemonicMappingName: this.mnemonicMappingName,
       queueState: this.queueManager.getState(),
       currentWordIndex: this.currentWordIndex
     };
@@ -135,6 +146,7 @@ class AppState {
     this.words = [...state.words];
     this.duration = state.duration;
     this.mnemonicMapping = {...state.mnemonicMapping};
+    this.mnemonicMappingName = state.mnemonicMappingName;
     this.queueManager.restoreState(state.queueState);
     this.currentWordIndex = state.currentWordIndex;
   }
