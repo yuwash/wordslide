@@ -10,8 +10,6 @@
   let uploadError = $state('');
   let successMessage = $state('');
 
-  const defaultMappingName = 'tokipona-12-emoji.json';
-
   // Store image blobs for display
   let imageBlobs: Map<string, string> = new Map();
 
@@ -236,7 +234,7 @@
       { id: '4', word: 'stôl', meaning: 'table' },
       { id: '5', word: 'včela', meaning: 'bee' }
     ]);
-    appState.setMnemonicMapping(defaultMapping as MnemonicMapping, defaultMappingName);
+    appState.setMnemonicMapping(defaultMapping as MnemonicMapping, 'tokipona-12-emoji.json');
     successMessage = 'Reset to default Slovak vocabulary list.';
     uploadError = '';
   }
@@ -247,9 +245,8 @@
     uploadError = '';
   }
 
-
   function useDefaultMapping() {
-    appState.setMnemonicMapping(defaultMapping as MnemonicMapping, defaultMappingName);
+    appState.setMnemonicMapping(defaultMapping as MnemonicMapping, 'tokipona-12-emoji.json');
     successMessage = 'Switched to default mnemonic mapping.';
     uploadError = '';
   }
@@ -313,9 +310,9 @@
       </label>
     </div>
     <p class="help">Currently using mapping: <span class="tag">{appState.mnemonicMappingName}</span> 
-      {#if appState.mnemonicMappingName !== defaultMappingName}
+      {#if appState.mnemonicMappingName !== 'tokipona-12-emoji.json'}
         <button class="button is-small is-outlined is-primary ml-2" onclick={useDefaultMapping}>
-          Use default ({defaultMappingName})
+          Use default
         </button>
       {/if}
     </p>
