@@ -247,12 +247,6 @@
     <!-- Main Card Display -->
     <div class="card my-3 mx-auto" style="max-width: 50rem">
       <div class="card-content has-text-centered">
-        <!-- Progress Indicator -->
-        <div class="is-flex is-justify-content-between is-align-items-center mb-4 text-muted">
-          <span class="tag is-info mr-1">Word {appState.currentWordIndex + 1} of {appState.words.length}</span>
-          <span class="tag">Step {step} / {totalSteps}</span>
-        </div>
-
         <!-- Word's Meaning (Always Visible) -->
         <div>
           <p class="heading is-size-6 text-uppercase tracking-wider">Meaning</p>
@@ -292,6 +286,10 @@
             {currentText}
           </p>
           <p class="is-size-7">
+            <!-- Progress Indicator -->
+            <span class="tag is-info mr-1">Word {appState.currentWordIndex + 1} of {appState.words.length}</span>
+            <span class="tag mr-1">Step {step} / {totalSteps}</span>
+
             {#if isFullyRevealed}
               <span class="tag is-success">Fully Revealed</span>
             {:else}
