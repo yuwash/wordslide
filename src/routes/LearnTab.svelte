@@ -192,52 +192,6 @@
 </script>
 
 <div class="learn-container">
-  <!-- Slideshow controls at the top -->
-  <div class="is-flex is-justify-content-center is-align-items-center gap-3">
-    <button
-      id="play-pause-button"
-      class="button is-large {isPlaying ? 'is-danger' : 'is-success'}"
-      onclick={togglePlay}
-      disabled={appState.words.length === 0}
-    >
-      <span class="icon mr-2">
-        {isPlaying ? '⏸' : '▶'}
-      </span>
-      <span>
-        {isPlaying ? 'Pause' : 'Start'}
-      </span>
-    </button>
-
-    <div class="buttons ml-4">
-      <button
-        class="button is-medium"
-        onclick={previousWord}
-        disabled={appState.words.length === 0}
-        title="Previous word"
-      >
-        ⏮ Prev Word
-      </button>
-
-      <button
-        class="button is-medium"
-        onclick={advanceStep}
-        disabled={appState.words.length === 0}
-        title="Advance reveal / Next word"
-      >
-        ⏭ Next Reveal
-      </button>
-
-      <button
-        class="button is-medium"
-        onclick={nextWord}
-        disabled={appState.words.length === 0}
-        title="Skip to next word"
-      >
-        Skip Word ⏭
-      </button>
-    </div>
-  </div>
-
   {#if appState.words.length === 0}
     <div class="notification is-warning has-text-centered">
       <p class="title is-4">No words loaded</p>
@@ -302,8 +256,50 @@
       <!-- Card footer/progress bar -->
       <footer class="card-footer">
         <div class="column is-full p-3 is-flex is-justify-content-space-between is-align-items-center">
-          <div class="is-size-7">
-            Auto-flip speed: <strong>{appState.duration}s</strong>
+          <!-- Slideshow controls -->
+          <div class="is-flex">
+            <button
+              id="play-pause-button"
+              class="button {isPlaying ? 'is-danger' : 'is-success'}"
+              onclick={togglePlay}
+              disabled={appState.words.length === 0}
+            >
+              <span class="icon mr-1">
+                {isPlaying ? '⏸' : '▶'}
+              </span>
+              <span>
+                {isPlaying ? 'Pause' : 'Start'}
+              </span>
+            </button>
+
+            <div class="buttons has-addons ml-2">
+              <button
+                class="button is-small"
+                onclick={previousWord}
+                disabled={appState.words.length === 0}
+                title="Previous word"
+              >
+                ⏮ Prev Word
+              </button>
+
+              <button
+                class="button is-small"
+                onclick={advanceStep}
+                disabled={appState.words.length === 0}
+                title="Advance reveal / Next word"
+              >
+                ⏭ Next Reveal
+              </button>
+
+              <button
+                class="button is-small"
+                onclick={nextWord}
+                disabled={appState.words.length === 0}
+                title="Skip to next word"
+              >
+                Skip Word ⏭
+              </button>
+            </div>
           </div>
           <div>
             {#if isPlaying}
